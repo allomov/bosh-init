@@ -38,7 +38,6 @@ import (
 	bmdeplmanifest "github.com/cloudfoundry/bosh-micro-cli/deployment/manifest"
 	bmsshtunnel "github.com/cloudfoundry/bosh-micro-cli/deployment/sshtunnel"
 	bmvm "github.com/cloudfoundry/bosh-micro-cli/deployment/vm"
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
 	bminstall "github.com/cloudfoundry/bosh-micro-cli/installation"
 	bminstalljob "github.com/cloudfoundry/bosh-micro-cli/installation/job"
 	bminstallmanifest "github.com/cloudfoundry/bosh-micro-cli/installation/manifest"
@@ -49,6 +48,7 @@ import (
 	bmrelset "github.com/cloudfoundry/bosh-micro-cli/release/set"
 	bmrelsetmanifest "github.com/cloudfoundry/bosh-micro-cli/release/set/manifest"
 	bmstemcell "github.com/cloudfoundry/bosh-micro-cli/stemcell"
+	bmui "github.com/cloudfoundry/bosh-micro-cli/ui"
 
 	fakebmcrypto "github.com/cloudfoundry/bosh-micro-cli/crypto/fakes"
 	fakebmstemcell "github.com/cloudfoundry/bosh-micro-cli/stemcell/fakes"
@@ -109,7 +109,7 @@ var _ = Describe("bosh-micro", func() {
 			diskDeployer       bmvm.DiskDeployer
 
 			ui          *fakeui.FakeUI
-			eventLogger bmeventlog.EventLogger
+			eventLogger bmui.Stage
 
 			stemcellManagerFactory bmstemcell.ManagerFactory
 			vmManagerFactory       bmvm.ManagerFactory
@@ -721,7 +721,7 @@ cloud_provider:
 			fakeStemcellExtractor = fakebmstemcell.NewFakeExtractor()
 
 			ui = &fakeui.FakeUI{}
-			eventLogger = bmeventlog.NewEventLogger(ui)
+			eventLogger = bmui.NewEventLogger(ui)
 
 			mockAgentClientFactory = mock_httpagent.NewMockAgentClientFactory(mockCtrl)
 			mockAgentClient = mock_agentclient.NewMockAgentClient(mockCtrl)

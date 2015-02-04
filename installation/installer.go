@@ -1,13 +1,10 @@
 package installation
 
 import (
-	"fmt"
-
 	bosherr "github.com/cloudfoundry/bosh-agent/errors"
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 
 	bmcpirel "github.com/cloudfoundry/bosh-micro-cli/cpi/release"
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
 	bminstalljob "github.com/cloudfoundry/bosh-micro-cli/installation/job"
 	bminstallmanifest "github.com/cloudfoundry/bosh-micro-cli/installation/manifest"
 	bminstallpkg "github.com/cloudfoundry/bosh-micro-cli/installation/pkg"
@@ -17,7 +14,7 @@ import (
 )
 
 type Installer interface {
-	Install(bminstallmanifest.Manifest, bmeventlog.Stage) (Installation, error)
+	Install(bminstallmanifest.Manifest, bmui.Stage) (Installation, error)
 }
 
 type installer struct {
@@ -52,25 +49,25 @@ func NewInstaller(
 	}
 }
 
-func (i *installer) Install(manifest bminstallmanifest.Manifest, stage bmeventlog.Stage) (Installation, error) {
+func (i *installer) Install(manifest bminstallmanifest.Manifest, stage bmui.Stage) (Installation, error) {
 	i.logger.Info(i.logTag, "Installing CPI deployment '%s'", manifest.Name)
 	i.logger.Debug(i.logTag, "Installing CPI deployment '%s' with manifest: %#v", manifest.Name, manifest)
 
 	releaseName := manifest.Release
 	release, err := i.releaseResolver.Find(releaseName)
 	if err != nil {
-		i.ui.Error(fmt.Sprintf("Could not find CPI release '%s'", releaseName))
+		i.ui.ErrorLinef("Could not find CPI release '%s'", releaseName)
 		return nil, bosherr.WrapErrorf(err, "CPI release '%s' not found", releaseName)
 	}
 
 	if !release.Exists() {
-		i.ui.Error("Could not find extracted CPI release")
+		i.ui.ErrorLinef("Could not find extracted CPI release")
 		return nil, bosherr.Errorf("Extracted CPI release does not exist")
 	}
 
 	err = i.releaseCompiler.Compile(release, manifest, stage)
 	if err != nil {
-		i.ui.Error("Could not compile CPI release")
+		i.ui.ErrorLinef("Could not compile CPI release")
 		return nil, bosherr.WrapError(err, "Compiling CPI release")
 	}
 
@@ -78,13 +75,13 @@ func (i *installer) Install(manifest bminstallmanifest.Manifest, stage bmeventlo
 	releaseJob, found := release.FindJobByName(cpiJobName)
 
 	if !found {
-		i.ui.Error(fmt.Sprintf("Could not find CPI job '%s' in release '%s'", cpiJobName, release.Name()))
+		i.ui.ErrorLinef("Could not find CPI job '%s' in release '%s'", cpiJobName, release.Name())
 		return nil, bosherr.Errorf("Invalid CPI release: job '%s' not found in release '%s'", cpiJobName, release.Name())
 	}
 
 	installedJob, err := i.jobInstaller.Install(releaseJob, stage)
 	if err != nil {
-		i.ui.Error(fmt.Sprintf("Could not install job '%s'", releaseJob.Name))
+		i.ui.ErrorLinef("Could not install job '%s'", releaseJob.Name)
 		return nil, bosherr.WrapErrorf(err, "Installing job '%s' for CPI release", releaseJob.Name)
 	}
 

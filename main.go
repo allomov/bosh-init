@@ -8,6 +8,7 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 	boshlogfile "github.com/cloudfoundry/bosh-agent/logger/file"
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
+	boshtime "github.com/cloudfoundry/bosh-agent/time"
 	boshuuid "github.com/cloudfoundry/bosh-agent/uuid"
 
 	bmcmd "github.com/cloudfoundry/bosh-micro-cli/cmd"
@@ -28,24 +29,24 @@ func main() {
 
 	uuidGenerator := boshuuid.NewGenerator()
 
-	ui := bmui.NewUI(os.Stdout, os.Stderr, logger)
+	ui := bmui.NewConsoleUI(logger)
+
+	timeService := boshtime.NewConcreteService()
 
 	cmdFactory := bmcmd.NewFactory(
 		config,
 		configService,
 		fileSystem,
 		ui,
+		timeService,
 		logger,
 		uuidGenerator,
 		workspaceRootPath,
 	)
 
-	cmdRunner := bmcmd.NewRunner(cmdFactory)
+	cmdRunner := bmcmd.NewRunner(cmdFactory, ui, timeService, logger)
 
-	err := cmdRunner.Run(os.Args[1:])
-	if err != nil {
-		fail(err, logger)
-	}
+	cmdRunner.Run(os.Args[1:]...)
 }
 
 func newLogger() boshlog.Logger {

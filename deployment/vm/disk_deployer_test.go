@@ -14,7 +14,7 @@ import (
 	bmconfig "github.com/cloudfoundry/bosh-micro-cli/config"
 	bmdisk "github.com/cloudfoundry/bosh-micro-cli/deployment/disk"
 	bmdeplmanifest "github.com/cloudfoundry/bosh-micro-cli/deployment/manifest"
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
+	bmui "github.com/cloudfoundry/bosh-micro-cli/ui"
 
 	fakebmcloud "github.com/cloudfoundry/bosh-micro-cli/cloud/fakes"
 	fakebmconfig "github.com/cloudfoundry/bosh-micro-cli/config/fakes"
@@ -106,9 +106,9 @@ var _ = Describe("DiskDeployer", func() {
 
 					Expect(fakeStage.Steps).ToNot(ContainElement(&fakebmlog.FakeStep{
 						Name: "Creating disk",
-						States: []bmeventlog.EventState{
-							bmeventlog.Started,
-							bmeventlog.Finished,
+						States: []bmui.EventState{
+							bmui.Started,
+							bmui.Finished,
 						},
 					}))
 				})
@@ -144,9 +144,9 @@ var _ = Describe("DiskDeployer", func() {
 
 					Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 						Name: "Creating disk",
-						States: []bmeventlog.EventState{
-							bmeventlog.Started,
-							bmeventlog.Finished,
+						States: []bmui.EventState{
+							bmui.Started,
+							bmui.Finished,
 						},
 					}))
 				})
@@ -161,9 +161,9 @@ var _ = Describe("DiskDeployer", func() {
 
 					Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 						Name: "Attaching disk 'fake-secondary-disk-cid' to VM 'fake-vm-cid'",
-						States: []bmeventlog.EventState{
-							bmeventlog.Started,
-							bmeventlog.Finished,
+						States: []bmui.EventState{
+							bmui.Started,
+							bmui.Finished,
 						},
 					}))
 				})
@@ -175,9 +175,9 @@ var _ = Describe("DiskDeployer", func() {
 
 					Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 						Name: "Migrating disk content from 'fake-existing-disk-cid' to 'fake-secondary-disk-cid'",
-						States: []bmeventlog.EventState{
-							bmeventlog.Started,
-							bmeventlog.Finished,
+						States: []bmui.EventState{
+							bmui.Started,
+							bmui.Finished,
 						},
 					}))
 				})
@@ -191,9 +191,9 @@ var _ = Describe("DiskDeployer", func() {
 
 					Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 						Name: "Detaching disk 'fake-existing-disk-cid'",
-						States: []bmeventlog.EventState{
-							bmeventlog.Started,
-							bmeventlog.Finished,
+						States: []bmui.EventState{
+							bmui.Started,
+							bmui.Finished,
 						},
 					}))
 				})
@@ -235,9 +235,9 @@ var _ = Describe("DiskDeployer", func() {
 
 						Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 							Name: "Attaching disk 'fake-secondary-disk-cid' to VM 'fake-vm-cid'",
-							States: []bmeventlog.EventState{
-								bmeventlog.Started,
-								bmeventlog.Failed,
+							States: []bmui.EventState{
+								bmui.Started,
+								bmui.Failed,
 							},
 							FailMessage: "fake-attach-disk-error",
 						}))
@@ -256,9 +256,9 @@ var _ = Describe("DiskDeployer", func() {
 
 						Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 							Name: "Detaching disk 'fake-existing-disk-cid'",
-							States: []bmeventlog.EventState{
-								bmeventlog.Started,
-								bmeventlog.Failed,
+							States: []bmui.EventState{
+								bmui.Started,
+								bmui.Failed,
 							},
 							FailMessage: "fake-detach-disk-error",
 						}))
@@ -278,9 +278,9 @@ var _ = Describe("DiskDeployer", func() {
 
 						Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 							Name: "Migrating disk content from 'fake-existing-disk-cid' to 'fake-secondary-disk-cid'",
-							States: []bmeventlog.EventState{
-								bmeventlog.Started,
-								bmeventlog.Failed,
+							States: []bmui.EventState{
+								bmui.Started,
+								bmui.Failed,
 							},
 							FailMessage: "fake-migrate-disk-error",
 						}))
@@ -318,9 +318,9 @@ var _ = Describe("DiskDeployer", func() {
 
 				Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 					Name: "Creating disk",
-					States: []bmeventlog.EventState{
-						bmeventlog.Started,
-						bmeventlog.Finished,
+					States: []bmui.EventState{
+						bmui.Started,
+						bmui.Finished,
 					},
 				}))
 			})
@@ -342,9 +342,9 @@ var _ = Describe("DiskDeployer", func() {
 
 			Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 				Name: "Attaching disk 'fake-new-disk-cid' to VM 'fake-vm-cid'",
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Finished,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Finished,
 				},
 			}))
 		})
@@ -385,9 +385,9 @@ var _ = Describe("DiskDeployer", func() {
 
 				Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 					Name: "Creating disk",
-					States: []bmeventlog.EventState{
-						bmeventlog.Started,
-						bmeventlog.Failed,
+					States: []bmui.EventState{
+						bmui.Started,
+						bmui.Failed,
 					},
 					FailMessage: "fake-create-disk-error",
 				}))
@@ -411,9 +411,9 @@ var _ = Describe("DiskDeployer", func() {
 
 				Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 					Name: "Attaching disk 'fake-new-disk-cid' to VM 'fake-vm-cid'",
-					States: []bmeventlog.EventState{
-						bmeventlog.Started,
-						bmeventlog.Failed,
+					States: []bmui.EventState{
+						bmui.Started,
+						bmui.Failed,
 					},
 					FailMessage: "fake-attach-disk-error",
 				}))

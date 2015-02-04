@@ -28,10 +28,10 @@ import (
 	bminstance "github.com/cloudfoundry/bosh-micro-cli/deployment/instance"
 	bmsshtunnel "github.com/cloudfoundry/bosh-micro-cli/deployment/sshtunnel"
 	bmvm "github.com/cloudfoundry/bosh-micro-cli/deployment/vm"
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
 	bmstemcell "github.com/cloudfoundry/bosh-micro-cli/stemcell"
+	bmui "github.com/cloudfoundry/bosh-micro-cli/ui"
 
-	fakebmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger/fakes"
+	fakebmui "github.com/cloudfoundry/bosh-micro-cli/ui/fakes"
 )
 
 var _ = Describe("Manager", func() {
@@ -164,7 +164,7 @@ var _ = Describe("Manager", func() {
 
 			deploymentConfigPath = "/deployment.json"
 
-			fakeStage *fakebmeventlog.FakeStage
+			fakeStage *fakebmui.FakeStage
 
 			deploymentManager Manager
 		)
@@ -186,7 +186,7 @@ var _ = Describe("Manager", func() {
 			mockCloud = mock_cloud.NewMockCloud(mockCtrl)
 			mockAgentClient = mock_agentclient.NewMockAgentClient(mockCtrl)
 
-			fakeStage = fakebmeventlog.NewFakeStage()
+			fakeStage = fakebmui.NewFakeStage()
 		})
 
 		JustBeforeEach(func() {
@@ -273,12 +273,12 @@ var _ = Describe("Manager", func() {
 				err := deploymentManager.Cleanup(fakeStage)
 				Expect(err).ToNot(HaveOccurred())
 
-				Expect(fakeStage.Steps).To(Equal([]*fakebmeventlog.FakeStep{
-					&fakebmeventlog.FakeStep{
+				Expect(fakeStage.Steps).To(Equal([]*fakebmui.FakeStep{
+					&fakebmui.FakeStep{
 						Name: "Deleting unused disk 'orphan-disk-cid'",
-						States: []bmeventlog.EventState{
-							bmeventlog.Started,
-							bmeventlog.Finished,
+						States: []bmui.EventState{
+							bmui.Started,
+							bmui.Finished,
 						},
 					},
 				}))
@@ -308,12 +308,12 @@ var _ = Describe("Manager", func() {
 					err := deploymentManager.Cleanup(fakeStage)
 					Expect(err).ToNot(HaveOccurred())
 
-					Expect(fakeStage.Steps).To(Equal([]*fakebmeventlog.FakeStep{
-						&fakebmeventlog.FakeStep{
+					Expect(fakeStage.Steps).To(Equal([]*fakebmui.FakeStep{
+						&fakebmui.FakeStep{
 							Name: "Deleting unused disk 'orphan-disk-cid'",
-							States: []bmeventlog.EventState{
-								bmeventlog.Started,
-								bmeventlog.Skipped,
+							States: []bmui.EventState{
+								bmui.Started,
+								bmui.Skipped,
 							},
 							SkipMessage: "CPI 'delete_disk' method responded with error: CmdError{\"type\":\"Bosh::Cloud::DiskNotFound\",\"message\":\"fake-disk-not-found-message\",\"ok_to_retry\":false}",
 						},
@@ -345,12 +345,12 @@ var _ = Describe("Manager", func() {
 				err := deploymentManager.Cleanup(fakeStage)
 				Expect(err).ToNot(HaveOccurred())
 
-				Expect(fakeStage.Steps).To(Equal([]*fakebmeventlog.FakeStep{
-					&fakebmeventlog.FakeStep{
+				Expect(fakeStage.Steps).To(Equal([]*fakebmui.FakeStep{
+					&fakebmui.FakeStep{
 						Name: "Deleting unused stemcell 'orphan-stemcell-cid'",
-						States: []bmeventlog.EventState{
-							bmeventlog.Started,
-							bmeventlog.Finished,
+						States: []bmui.EventState{
+							bmui.Started,
+							bmui.Finished,
 						},
 					},
 				}))
@@ -380,12 +380,12 @@ var _ = Describe("Manager", func() {
 					err := deploymentManager.Cleanup(fakeStage)
 					Expect(err).ToNot(HaveOccurred())
 
-					Expect(fakeStage.Steps).To(Equal([]*fakebmeventlog.FakeStep{
-						&fakebmeventlog.FakeStep{
+					Expect(fakeStage.Steps).To(Equal([]*fakebmui.FakeStep{
+						&fakebmui.FakeStep{
 							Name: "Deleting unused stemcell 'orphan-stemcell-cid'",
-							States: []bmeventlog.EventState{
-								bmeventlog.Started,
-								bmeventlog.Skipped,
+							States: []bmui.EventState{
+								bmui.Started,
+								bmui.Skipped,
 							},
 							SkipMessage: "CPI 'delete_stemcell' method responded with error: CmdError{\"type\":\"Bosh::Cloud::StemcellNotFound\",\"message\":\"fake-stemcell-not-found-message\",\"ok_to_retry\":false}",
 						},

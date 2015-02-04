@@ -5,14 +5,18 @@ type FakeUI struct {
 	Errors []string
 }
 
-func (ui *FakeUI) Say(message string) {
-	ui.Said = append(ui.Said, message)
-}
-
-func (ui *FakeUI) Sayln(message string) {
-	ui.Said = append(ui.Said, message)
-}
-
-func (ui *FakeUI) Error(message string) {
+func (ui *FakeUI) ErrorLinef(message string) {
 	ui.Errors = append(ui.Errors, message)
+}
+
+func (ui *FakeUI) PrintLinef(message string) {
+	ui.Said = append(ui.Said, message)
+}
+
+func (ui *FakeUI) BeginLinef(message string) {
+	ui.Said = append(ui.Said, message)
+}
+
+func (ui *FakeUI) EndLinef(message string) {
+	ui.Said = append(ui.Said, message)
 }

@@ -16,7 +16,7 @@ import (
 	bmconfig "github.com/cloudfoundry/bosh-micro-cli/config"
 	bmdisk "github.com/cloudfoundry/bosh-micro-cli/deployment/disk"
 	bmdeplmanifest "github.com/cloudfoundry/bosh-micro-cli/deployment/manifest"
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
+	bmui "github.com/cloudfoundry/bosh-micro-cli/ui"
 
 	. "github.com/cloudfoundry/bosh-micro-cli/deployment/disk"
 )
@@ -222,16 +222,16 @@ var _ = Describe("Manager", func() {
 
 			Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 				Name: "Deleting unused disk 'fake-disk-cid-1'",
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Finished,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Finished,
 				},
 			}))
 			Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 				Name: "Deleting unused disk 'fake-disk-cid-3'",
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Finished,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Finished,
 				},
 			}))
 

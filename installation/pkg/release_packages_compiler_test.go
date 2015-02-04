@@ -11,10 +11,10 @@ import (
 	fakesys "github.com/cloudfoundry/bosh-agent/system/fakes"
 	faketime "github.com/cloudfoundry/bosh-agent/time/fakes"
 
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
 	bmrel "github.com/cloudfoundry/bosh-micro-cli/release"
 	bmreljob "github.com/cloudfoundry/bosh-micro-cli/release/job"
 	bmrelpkg "github.com/cloudfoundry/bosh-micro-cli/release/pkg"
+	bmui "github.com/cloudfoundry/bosh-micro-cli/ui"
 
 	fakebmlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger/fakes"
 	fakebminstallpkg "github.com/cloudfoundry/bosh-micro-cli/installation/pkg/fakes"
@@ -94,9 +94,9 @@ var _ = Describe("ReleaseCompiler", func() {
 
 				Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 					Name: "Compiling package 'fake-package-1/fake-fingerprint-1'",
-					States: []bmeventlog.EventState{
-						bmeventlog.Started,
-						bmeventlog.Finished,
+					States: []bmui.EventState{
+						bmui.Started,
+						bmui.Finished,
 					},
 				}))
 			})
@@ -112,9 +112,9 @@ var _ = Describe("ReleaseCompiler", func() {
 
 				Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 					Name: "Compiling package 'fake-package-1/fake-fingerprint-1'",
-					States: []bmeventlog.EventState{
-						bmeventlog.Started,
-						bmeventlog.Failed,
+					States: []bmui.EventState{
+						bmui.Started,
+						bmui.Failed,
 					},
 					FailMessage: "fake-compilation-error",
 				}))

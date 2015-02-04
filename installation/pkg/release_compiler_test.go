@@ -18,9 +18,9 @@ import (
 	bmreljob "github.com/cloudfoundry/bosh-micro-cli/release/job"
 	bmrelpkg "github.com/cloudfoundry/bosh-micro-cli/release/pkg"
 
-	fakebmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger/fakes"
 	fakebmcomp "github.com/cloudfoundry/bosh-micro-cli/installation/pkg/fakes"
 	fakebmtemp "github.com/cloudfoundry/bosh-micro-cli/templatescompiler/fakes"
+	fakebmui "github.com/cloudfoundry/bosh-micro-cli/ui/fakes"
 )
 
 var _ = Describe("ReleaseCompiler", func() {
@@ -64,7 +64,7 @@ var _ = Describe("ReleaseCompiler", func() {
 		var (
 			manifest            bminstallmanifest.Manifest
 			deploymentProperies bmproperty.Map
-			fakeStage           *fakebmeventlog.FakeStage
+			fakeStage           *fakebmui.FakeStage
 		)
 
 		BeforeEach(func() {
@@ -79,7 +79,7 @@ var _ = Describe("ReleaseCompiler", func() {
 				},
 			}
 
-			fakeStage = fakebmeventlog.NewFakeStage()
+			fakeStage = fakebmui.NewFakeStage()
 
 			fakeTemplatesCompiler.SetCompileBehavior([]bmreljob.Job{cpiJob}, "fake-deployment-name", deploymentProperies, fakeStage, nil)
 		})

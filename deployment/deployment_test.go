@@ -29,10 +29,10 @@ import (
 	bminstance "github.com/cloudfoundry/bosh-micro-cli/deployment/instance"
 	bmsshtunnel "github.com/cloudfoundry/bosh-micro-cli/deployment/sshtunnel"
 	bmvm "github.com/cloudfoundry/bosh-micro-cli/deployment/vm"
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
 	bmstemcell "github.com/cloudfoundry/bosh-micro-cli/stemcell"
+	bmui "github.com/cloudfoundry/bosh-micro-cli/ui"
 
-	fakebmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger/fakes"
+	fakebmui "github.com/cloudfoundry/bosh-micro-cli/ui/fakes"
 )
 
 var _ = Describe("Deployment", func() {
@@ -69,7 +69,7 @@ var _ = Describe("Deployment", func() {
 
 			deploymentConfigPath = "/deployment.json"
 
-			fakeStage *fakebmeventlog.FakeStage
+			fakeStage *fakebmui.FakeStage
 
 			deploymentFactory Factory
 
@@ -89,12 +89,12 @@ var _ = Describe("Deployment", func() {
 			)
 		}
 
-		var fakeStep = func(name string) *fakebmeventlog.FakeStep {
-			return &fakebmeventlog.FakeStep{
+		var fakeStep = func(name string) *fakebmui.FakeStep {
+			return &fakebmui.FakeStep{
 				Name: name,
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Finished,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Finished,
 				},
 			}
 		}
@@ -142,7 +142,7 @@ var _ = Describe("Deployment", func() {
 			mockCloud = mock_cloud.NewMockCloud(mockCtrl)
 			mockAgentClient = mock_agentclient.NewMockAgentClient(mockCtrl)
 
-			fakeStage = fakebmeventlog.NewFakeStage()
+			fakeStage = fakebmui.NewFakeStage()
 
 			pingTimeout := 10 * time.Second
 			pingDelay := 500 * time.Millisecond
@@ -216,7 +216,7 @@ var _ = Describe("Deployment", func() {
 				err := deployment.Delete(fakeStage)
 				Expect(err).ToNot(HaveOccurred())
 
-				Expect(fakeStage.Steps).To(Equal([]*fakebmeventlog.FakeStep{
+				Expect(fakeStage.Steps).To(Equal([]*fakebmui.FakeStep{
 					fakeStep("Waiting for the agent on VM 'fake-vm-cid'"),
 					fakeStep("Stopping jobs on instance 'unknown/0'"),
 					fakeStep("Unmounting disk 'fake-disk-cid'"),
@@ -281,7 +281,7 @@ var _ = Describe("Deployment", func() {
 					Expect(err).ToNot(HaveOccurred())
 
 					// reset event log recording
-					fakeStage = fakebmeventlog.NewFakeStage()
+					fakeStage = fakebmui.NewFakeStage()
 				})
 
 				It("does not delete anything", func() {

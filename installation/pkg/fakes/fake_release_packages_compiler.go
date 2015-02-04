@@ -1,21 +1,21 @@
 package fakes
 
 import (
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
 	bmrel "github.com/cloudfoundry/bosh-micro-cli/release"
+	bmui "github.com/cloudfoundry/bosh-micro-cli/ui"
 )
 
 type FakeReleasePackagesCompiler struct {
 	CompileError   error
 	CompileRelease bmrel.Release
-	CompileStage   bmeventlog.Stage
+	CompileStage   bmui.Stage
 }
 
 func NewFakeReleasePackagesCompiler() *FakeReleasePackagesCompiler {
 	return &FakeReleasePackagesCompiler{}
 }
 
-func (c *FakeReleasePackagesCompiler) Compile(release bmrel.Release, stage bmeventlog.Stage) error {
+func (c *FakeReleasePackagesCompiler) Compile(release bmrel.Release, stage bmui.Stage) error {
 	c.CompileRelease = release
 	c.CompileStage = stage
 

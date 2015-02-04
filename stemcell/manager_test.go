@@ -15,7 +15,7 @@ import (
 
 	bmproperty "github.com/cloudfoundry/bosh-micro-cli/common/property"
 	bmconfig "github.com/cloudfoundry/bosh-micro-cli/config"
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
+	bmui "github.com/cloudfoundry/bosh-micro-cli/ui"
 
 	fakebmcloud "github.com/cloudfoundry/bosh-micro-cli/cloud/fakes"
 	fakebmlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger/fakes"
@@ -120,9 +120,9 @@ var _ = Describe("Manager", func() {
 
 			Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 				Name: "Uploading",
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Finished,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Finished,
 				},
 			}))
 		})
@@ -135,9 +135,9 @@ var _ = Describe("Manager", func() {
 
 			Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 				Name: "Uploading",
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Failed,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Failed,
 				},
 				FailMessage: "creating stemcell (fake-stemcell-name fake-stemcell-version): fake-create-error",
 			}))
@@ -151,9 +151,9 @@ var _ = Describe("Manager", func() {
 			Expect(fakeStage.Steps).To(HaveLen(1))
 			uploadStep := fakeStage.Steps[0]
 			Expect(uploadStep.FailMessage).To(ContainSubstring("fake-save-error"))
-			Expect(uploadStep.States).To(Equal([]bmeventlog.EventState{
-				bmeventlog.Started,
-				bmeventlog.Failed,
+			Expect(uploadStep.States).To(Equal([]bmui.EventState{
+				bmui.Started,
+				bmui.Failed,
 			}))
 			Expect(uploadStep.Name).To(Equal("Uploading"))
 		})
@@ -188,9 +188,9 @@ var _ = Describe("Manager", func() {
 
 				Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 					Name: "Uploading",
-					States: []bmeventlog.EventState{
-						bmeventlog.Started,
-						bmeventlog.Skipped,
+					States: []bmui.EventState{
+						bmui.Started,
+						bmui.Skipped,
 					},
 					SkipMessage: "Stemcell already uploaded",
 				}))
@@ -303,16 +303,16 @@ var _ = Describe("Manager", func() {
 
 			Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 				Name: "Deleting unused stemcell 'fake-stemcell-cid-1'",
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Finished,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Finished,
 				},
 			}))
 			Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 				Name: "Deleting unused stemcell 'fake-stemcell-cid-3'",
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Finished,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Finished,
 				},
 			}))
 

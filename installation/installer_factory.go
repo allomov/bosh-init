@@ -12,7 +12,6 @@ import (
 	boshuuid "github.com/cloudfoundry/bosh-agent/uuid"
 
 	bmconfig "github.com/cloudfoundry/bosh-micro-cli/config"
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
 	bmindex "github.com/cloudfoundry/bosh-micro-cli/index"
 	bminstallblob "github.com/cloudfoundry/bosh-micro-cli/installation/blob"
 	bminstalljob "github.com/cloudfoundry/bosh-micro-cli/installation/job"
@@ -39,7 +38,6 @@ type installerFactory struct {
 	uuidGenerator           boshuuid.Generator
 	timeService             boshtime.Service
 	registryServerManager   bmregistry.ServerManager
-	eventLogger             bmeventlog.EventLogger
 	logger                  boshlog.Logger
 	logTag                  string
 }
@@ -55,7 +53,6 @@ func NewInstallerFactory(
 	uuidGenerator boshuuid.Generator,
 	timeService boshtime.Service,
 	registryServerManager bmregistry.ServerManager,
-	eventLogger bmeventlog.EventLogger,
 	logger boshlog.Logger,
 ) InstallerFactory {
 	return &installerFactory{
@@ -69,7 +66,6 @@ func NewInstallerFactory(
 		uuidGenerator:           uuidGenerator,
 		timeService:             timeService,
 		registryServerManager:   registryServerManager,
-		eventLogger:             eventLogger,
 		logger:                  logger,
 		logTag:                  "installer",
 	}
@@ -99,7 +95,6 @@ func (f *installerFactory) NewInstaller() (Installer, error) {
 
 	context := &installerFactoryContext{
 		target:        target,
-		eventLogger:   f.eventLogger,
 		timeService:   f.timeService,
 		fs:            f.fs,
 		runner:        f.runner,
@@ -121,7 +116,6 @@ func (f *installerFactory) NewInstaller() (Installer, error) {
 
 type installerFactoryContext struct {
 	target        Target
-	eventLogger   bmeventlog.EventLogger
 	timeService   boshtime.Service
 	fs            boshsys.FileSystem
 	runner        boshsys.CmdRunner
@@ -146,7 +140,6 @@ func (c *installerFactoryContext) ReleaseCompiler() bminstallpkg.ReleaseCompiler
 
 	releasePackagesCompiler := bminstallpkg.NewReleasePackagesCompiler(
 		c.PackageCompiler(),
-		c.eventLogger,
 		c.timeService,
 	)
 

@@ -8,12 +8,12 @@ import (
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
 
 	bmproperty "github.com/cloudfoundry/bosh-micro-cli/common/property"
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
 	bmreljob "github.com/cloudfoundry/bosh-micro-cli/release/job"
+	bmui "github.com/cloudfoundry/bosh-micro-cli/ui"
 )
 
 type TemplatesCompiler interface {
-	Compile(jobs []bmreljob.Job, deploymentName string, deploymentProperties bmproperty.Map, stage bmeventlog.Stage) error
+	Compile(jobs []bmreljob.Job, deploymentName string, deploymentProperties bmproperty.Map, stage bmui.Stage) error
 }
 
 type templatesCompiler struct {
@@ -43,8 +43,8 @@ func NewTemplatesCompiler(
 	}
 }
 
-func (tc templatesCompiler) Compile(jobs []bmreljob.Job, deploymentName string, deploymentProperties bmproperty.Map, stage bmeventlog.Stage) error {
-	return stage.PerformStep("Rendering job templates", func() error {
+func (tc templatesCompiler) Compile(jobs []bmreljob.Job, deploymentName string, deploymentProperties bmproperty.Map, stage bmui.Stage) error {
+	return stage.Perform("Rendering job templates", func() error {
 		for _, job := range jobs {
 			err := tc.compileJob(job, deploymentName, deploymentProperties)
 			if err != nil {

@@ -240,7 +240,7 @@ var _ = Describe("bosh-micro", func() {
 		return outputLines[startIndex+1 : stopIndex], stopIndex
 	}
 
-	It("can deploy", func() {
+	FIt("can deploy", func() {
 		updateDeploymentManifest("./assets/manifest.yml")
 
 		setDeployment(testEnv.Path("manifest"))
@@ -268,7 +268,6 @@ var _ = Describe("bosh-micro", func() {
 		Expect(installingSteps[numInstallingSteps-3]).To(MatchRegexp("^Started installing CPI > Rendering job templates" + donePattern))
 		Expect(installingSteps[numInstallingSteps-2]).To(MatchRegexp("^Started installing CPI > Installing job 'cpi'" + donePattern))
 		Expect(installingSteps[numInstallingSteps-1]).To(MatchRegexp("^Started installing CPI > Starting registry" + donePattern))
-
 
 		uploadingSteps, doneIndex := findStage(outputLines, "uploading stemcell", doneIndex+1)
 		Expect(uploadingSteps[0]).To(MatchRegexp("^Started uploading stemcell > Uploading" + donePattern))

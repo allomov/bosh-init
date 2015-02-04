@@ -23,9 +23,9 @@ import (
 	bminstance "github.com/cloudfoundry/bosh-micro-cli/deployment/instance"
 	bmdeplmanifest "github.com/cloudfoundry/bosh-micro-cli/deployment/manifest"
 	bmsshtunnel "github.com/cloudfoundry/bosh-micro-cli/deployment/sshtunnel"
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
 	bminstallmanifest "github.com/cloudfoundry/bosh-micro-cli/installation/manifest"
 	bmstemcell "github.com/cloudfoundry/bosh-micro-cli/stemcell"
+	bmui "github.com/cloudfoundry/bosh-micro-cli/ui"
 
 	fakebmcloud "github.com/cloudfoundry/bosh-micro-cli/cloud/fakes"
 	fakebmconfig "github.com/cloudfoundry/bosh-micro-cli/config/fakes"
@@ -197,16 +197,16 @@ var _ = Describe("Deployer", func() {
 
 			Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 				Name: "Waiting for the agent on VM 'existing-vm-cid'",
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Finished,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Finished,
 				},
 			}))
 			Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 				Name: "Deleting VM 'existing-vm-cid'",
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Finished,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Finished,
 				},
 			}))
 		})
@@ -282,9 +282,9 @@ var _ = Describe("Deployer", func() {
 
 		Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 			Name: "Waiting for the agent on VM 'fake-vm-cid' to be ready",
-			States: []bmeventlog.EventState{
-				bmeventlog.Started,
-				bmeventlog.Finished,
+			States: []bmui.EventState{
+				bmui.Started,
+				bmui.Finished,
 			},
 		}))
 	})
@@ -301,9 +301,9 @@ var _ = Describe("Deployer", func() {
 
 			Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 				Name: "Waiting for the agent on VM 'fake-vm-cid' to be ready",
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Failed,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Failed,
 				},
 				FailMessage: "fake-wait-error",
 			}))
@@ -353,16 +353,16 @@ var _ = Describe("Deployer", func() {
 
 		Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 			Name: "Updating instance 'fake-job-name/0'",
-			States: []bmeventlog.EventState{
-				bmeventlog.Started,
-				bmeventlog.Finished,
+			States: []bmui.EventState{
+				bmui.Started,
+				bmui.Finished,
 			},
 		}))
 		Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 			Name: "Waiting for instance 'fake-job-name/0' to be running",
-			States: []bmeventlog.EventState{
-				bmeventlog.Started,
-				bmeventlog.Finished,
+			States: []bmui.EventState{
+				bmui.Started,
+				bmui.Finished,
 			},
 		}))
 	})
@@ -379,9 +379,9 @@ var _ = Describe("Deployer", func() {
 
 			Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 				Name: "Updating instance 'fake-job-name/0'",
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Failed,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Failed,
 				},
 				FailMessage: "Applying the agent state: fake-apply-error",
 			}))
@@ -400,9 +400,9 @@ var _ = Describe("Deployer", func() {
 
 			Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 				Name: "Updating instance 'fake-job-name/0'",
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Failed,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Failed,
 				},
 				FailMessage: "Starting the agent: fake-start-error",
 			}))
@@ -421,9 +421,9 @@ var _ = Describe("Deployer", func() {
 
 			Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 				Name: "Waiting for instance 'fake-job-name/0' to be running",
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Failed,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Failed,
 				},
 				FailMessage: "fake-wait-running-error",
 			}))

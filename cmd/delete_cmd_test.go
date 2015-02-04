@@ -24,15 +24,15 @@ import (
 	fakeuuid "github.com/cloudfoundry/bosh-agent/uuid/fakes"
 
 	bmconfig "github.com/cloudfoundry/bosh-micro-cli/config"
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
 	bminstallmanifest "github.com/cloudfoundry/bosh-micro-cli/installation/manifest"
 	bmrel "github.com/cloudfoundry/bosh-micro-cli/release"
 	bmreljob "github.com/cloudfoundry/bosh-micro-cli/release/job"
 	bmrelpkg "github.com/cloudfoundry/bosh-micro-cli/release/pkg"
 	bmrelset "github.com/cloudfoundry/bosh-micro-cli/release/set"
 	bmrelsetmanifest "github.com/cloudfoundry/bosh-micro-cli/release/set/manifest"
+	bmui "github.com/cloudfoundry/bosh-micro-cli/ui"
 
-	fakebmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger/fakes"
+	fakebmui "github.com/cloudfoundry/bosh-micro-cli/ui/fakes"
 	fakeui "github.com/cloudfoundry/bosh-micro-cli/ui/fakes"
 )
 
@@ -74,10 +74,10 @@ var _ = Describe("DeleteCmd", func() {
 			mockAgentClientFactory *mock_httpagent.MockAgentClientFactory
 			mockCloud              *mock_cloud.MockCloud
 
-			fakeEventLogger     *fakebmeventlog.FakeEventLogger
-			fakeValidatingStage *fakebmeventlog.FakeStage
-			fakeInstallingStage *fakebmeventlog.FakeStage
-			fakeDeletingStage   *fakebmeventlog.FakeStage
+			fakePerentStage     *fakebmui.FakeStage
+			fakeValidatingStage *fakebmui.FakeStage
+			fakeInstallingStage *fakebmui.FakeStage
+			fakeDeletingStage   *fakebmui.FakeStage
 
 			directorID string
 
@@ -171,7 +171,7 @@ cloud_provider:
 				mockAgentClientFactory,
 				mockBlobstoreFactory,
 				mockDeploymentManagerFactory,
-				fakeEventLogger,
+				fakePerentStage,
 				logger,
 			)
 		}
@@ -201,32 +201,32 @@ cloud_provider:
 				"Deployment state: '/deployment-dir/deployment.json'",
 			}))
 
-			Expect(fakeEventLogger.NewStageInputs).To(Equal([]fakebmeventlog.NewStageInput{
+			Expect(fakePerentStage.NewStageInputs).To(Equal([]fakebmui.NewStageInput{
 				{Name: "validating"},
 				{Name: "installing CPI"},
 				{Name: "deleting deployment"},
 			}))
 
-			Expect(fakeValidatingStage.Steps).To(Equal([]*fakebmeventlog.FakeStep{
-				&fakebmeventlog.FakeStep{
+			Expect(fakeValidatingStage.Steps).To(Equal([]*fakebmui.FakeStep{
+				&fakebmui.FakeStep{
 					Name: "Validating releases",
-					States: []bmeventlog.EventState{
-						bmeventlog.Started,
-						bmeventlog.Finished,
+					States: []bmui.EventState{
+						bmui.Started,
+						bmui.Finished,
 					},
 				},
-				&fakebmeventlog.FakeStep{
+				&fakebmui.FakeStep{
 					Name: "Validating deployment manifest",
-					States: []bmeventlog.EventState{
-						bmeventlog.Started,
-						bmeventlog.Finished,
+					States: []bmui.EventState{
+						bmui.Started,
+						bmui.Finished,
 					},
 				},
-				&fakebmeventlog.FakeStep{
+				&fakebmui.FakeStep{
 					Name: "Validating cpi release",
-					States: []bmeventlog.EventState{
-						bmeventlog.Started,
-						bmeventlog.Finished,
+					States: []bmui.EventState{
+						bmui.Started,
+						bmui.Finished,
 					},
 				},
 			}))
@@ -243,13 +243,13 @@ cloud_provider:
 
 			fakeUI = &fakeui.FakeUI{}
 
-			fakeEventLogger = fakebmeventlog.NewFakeEventLogger()
-			fakeValidatingStage = fakebmeventlog.NewFakeStage()
-			fakeEventLogger.SetNewStageBehavior("validating", fakeValidatingStage)
-			fakeInstallingStage = fakebmeventlog.NewFakeStage()
-			fakeEventLogger.SetNewStageBehavior("installing CPI", fakeInstallingStage)
-			fakeDeletingStage = fakebmeventlog.NewFakeStage()
-			fakeEventLogger.SetNewStageBehavior("deleting deployment", fakeDeletingStage)
+			fakePerentStage = fakebmui.NewFakeStage()
+			fakeValidatingStage = fakebmui.NewFakeStage()
+			fakePerentStage.SetNewStageBehavior("validating", fakeValidatingStage)
+			fakeInstallingStage = fakebmui.NewFakeStage()
+			fakePerentStage.SetNewStageBehavior("installing CPI", fakeInstallingStage)
+			fakeDeletingStage = fakebmui.NewFakeStage()
+			fakePerentStage.SetNewStageBehavior("deleting deployment", fakeDeletingStage)
 
 			mockCloud = mock_cloud.NewMockCloud(mockCtrl)
 			mockCloudFactory = mock_cloud.NewMockFactory(mockCtrl)

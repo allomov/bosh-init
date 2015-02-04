@@ -15,15 +15,14 @@ import (
 
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
 	bminstalljob "github.com/cloudfoundry/bosh-micro-cli/installation/job"
 	bminstallmanifest "github.com/cloudfoundry/bosh-micro-cli/installation/manifest"
 	bmrel "github.com/cloudfoundry/bosh-micro-cli/release"
 	bmreljob "github.com/cloudfoundry/bosh-micro-cli/release/job"
 	bmrelpkg "github.com/cloudfoundry/bosh-micro-cli/release/pkg"
+	bmui "github.com/cloudfoundry/bosh-micro-cli/ui"
 
 	fakesys "github.com/cloudfoundry/bosh-agent/system/fakes"
-	fakebmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger/fakes"
 	fakebminstalljob "github.com/cloudfoundry/bosh-micro-cli/installation/job/fakes"
 	fakebmcomp "github.com/cloudfoundry/bosh-micro-cli/installation/pkg/fakes"
 	testfakes "github.com/cloudfoundry/bosh-micro-cli/testutils/fakes"
@@ -91,7 +90,7 @@ var _ = Describe("Installer", func() {
 			installationManifest bminstallmanifest.Manifest
 			release              bmrel.Release
 			releaseJob           bmreljob.Job
-			fakeStage            *fakebmeventlog.FakeStage
+			fakeStage            *fakebmui.FakeStage
 
 			installedJob bminstalljob.InstalledJob
 
@@ -107,7 +106,7 @@ var _ = Describe("Installer", func() {
 				RawProperties: map[interface{}]interface{}{},
 			}
 
-			fakeStage = fakebmeventlog.NewFakeStage()
+			fakeStage = fakebmui.NewFakeStage()
 
 			releasePackage := &bmrelpkg.Package{
 				Name:          "fake-release-package-name",
@@ -149,7 +148,7 @@ var _ = Describe("Installer", func() {
 				fakeFS,
 			)
 
-			fakeJobInstaller.SetInstallBehavior(releaseJob, fakeStage, func(_ bmreljob.Job, _ bmeventlog.Stage) (bminstalljob.InstalledJob, error) {
+			fakeJobInstaller.SetInstallBehavior(releaseJob, fakeStage, func(_ bmreljob.Job, _ bmui.Stage) (bminstalljob.InstalledJob, error) {
 				return installedJob, nil
 			})
 

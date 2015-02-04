@@ -9,10 +9,10 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
 	bmreljob "github.com/cloudfoundry/bosh-micro-cli/release/job"
 	bmrelpkg "github.com/cloudfoundry/bosh-micro-cli/release/pkg"
 	bmtemplate "github.com/cloudfoundry/bosh-micro-cli/templatescompiler"
+	bmui "github.com/cloudfoundry/bosh-micro-cli/ui"
 
 	fakesys "github.com/cloudfoundry/bosh-agent/system/fakes"
 	faketime "github.com/cloudfoundry/bosh-agent/time/fakes"
@@ -112,9 +112,9 @@ var _ = Describe("Installer", func() {
 
 			Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 				Name: "Installing job 'cpi'",
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Finished,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Finished,
 				},
 			}))
 		})
@@ -131,9 +131,9 @@ var _ = Describe("Installer", func() {
 
 			Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 				Name: "Installing job 'cpi'",
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Failed,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Failed,
 				},
 				FailMessage: "Creating job directory '/fake/jobs/cpi': fake-mkdir-error",
 			}))

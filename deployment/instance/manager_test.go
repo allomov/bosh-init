@@ -21,8 +21,8 @@ import (
 	bmdisk "github.com/cloudfoundry/bosh-micro-cli/deployment/disk"
 	bmdeplmanifest "github.com/cloudfoundry/bosh-micro-cli/deployment/manifest"
 	bmsshtunnel "github.com/cloudfoundry/bosh-micro-cli/deployment/sshtunnel"
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
 	bminstallmanifest "github.com/cloudfoundry/bosh-micro-cli/installation/manifest"
+	bmui "github.com/cloudfoundry/bosh-micro-cli/ui"
 
 	fakebmcloud "github.com/cloudfoundry/bosh-micro-cli/cloud/fakes"
 	fakebmdisk "github.com/cloudfoundry/bosh-micro-cli/deployment/disk/fakes"
@@ -240,9 +240,9 @@ var _ = Describe("Manager", func() {
 
 			Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 				Name: "Creating VM for instance 'fake-job-name/0' from stemcell 'fake-stemcell-cid'",
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Finished,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Finished,
 				},
 			}))
 		})
@@ -286,9 +286,9 @@ var _ = Describe("Manager", func() {
 
 			Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 				Name: "Waiting for the agent on VM 'fake-vm-cid' to be ready",
-				States: []bmeventlog.EventState{
-					bmeventlog.Started,
-					bmeventlog.Finished,
+				States: []bmui.EventState{
+					bmui.Started,
+					bmui.Finished,
 				},
 			}))
 		})
@@ -430,9 +430,9 @@ var _ = Describe("Manager", func() {
 
 				Expect(fakeStage.Steps).To(ContainElement(&fakebmlog.FakeStep{
 					Name: "Creating VM for instance 'fake-job-name/0' from stemcell 'fake-stemcell-cid'",
-					States: []bmeventlog.EventState{
-						bmeventlog.Started,
-						bmeventlog.Failed,
+					States: []bmui.EventState{
+						bmui.Started,
+						bmui.Failed,
 					},
 					FailMessage: "Creating VM: fake-create-vm-error",
 				}))

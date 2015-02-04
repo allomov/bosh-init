@@ -10,11 +10,11 @@ import (
 	boshsys "github.com/cloudfoundry/bosh-agent/system"
 	boshtime "github.com/cloudfoundry/bosh-agent/time"
 
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
 	bminstallblob "github.com/cloudfoundry/bosh-micro-cli/installation/blob"
 	bminstallpkg "github.com/cloudfoundry/bosh-micro-cli/installation/pkg"
 	bmreljob "github.com/cloudfoundry/bosh-micro-cli/release/job"
 	bmtemcomp "github.com/cloudfoundry/bosh-micro-cli/templatescompiler"
+	bmui "github.com/cloudfoundry/bosh-micro-cli/ui"
 )
 
 type InstalledJob struct {
@@ -23,7 +23,7 @@ type InstalledJob struct {
 }
 
 type Installer interface {
-	Install(bmreljob.Job, bmeventlog.Stage) (InstalledJob, error)
+	Install(bmreljob.Job, bmui.Stage) (InstalledJob, error)
 }
 
 type jobInstaller struct {
@@ -36,9 +36,9 @@ type jobInstaller struct {
 	timeService       boshtime.Service
 }
 
-func (i jobInstaller) Install(job bmreljob.Job, stage bmeventlog.Stage) (installedJob InstalledJob, err error) {
+func (i jobInstaller) Install(job bmreljob.Job, stage bmui.Stage) (installedJob InstalledJob, err error) {
 	stageName := fmt.Sprintf("Installing job '%s'", job.Name)
-	err = stage.PerformStep(stageName, func() error {
+	err = stage.Perform(stageName, func() error {
 		installedJob, err = i.install(job)
 		return err
 	})

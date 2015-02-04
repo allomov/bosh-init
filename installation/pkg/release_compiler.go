@@ -7,15 +7,15 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-agent/logger"
 
 	bmcpirel "github.com/cloudfoundry/bosh-micro-cli/cpi/release"
-	bmeventlog "github.com/cloudfoundry/bosh-micro-cli/eventlogger"
 	bminstallmanifest "github.com/cloudfoundry/bosh-micro-cli/installation/manifest"
 	bmrel "github.com/cloudfoundry/bosh-micro-cli/release"
 	bmreljob "github.com/cloudfoundry/bosh-micro-cli/release/job"
 	bmtemcomp "github.com/cloudfoundry/bosh-micro-cli/templatescompiler"
+	bmui "github.com/cloudfoundry/bosh-micro-cli/ui"
 )
 
 type ReleaseCompiler interface {
-	Compile(bmrel.Release, bminstallmanifest.Manifest, bmeventlog.Stage) error
+	Compile(bmrel.Release, bminstallmanifest.Manifest, bmui.Stage) error
 }
 
 type releaseCompiler struct {
@@ -38,7 +38,7 @@ func NewReleaseCompiler(
 	}
 }
 
-func (c releaseCompiler) Compile(release bmrel.Release, manifest bminstallmanifest.Manifest, stage bmeventlog.Stage) error {
+func (c releaseCompiler) Compile(release bmrel.Release, manifest bminstallmanifest.Manifest, stage bmui.Stage) error {
 	c.logger.Info(c.logTag, "Compiling CPI release '%s'", release.Name())
 	c.logger.Debug(c.logTag, fmt.Sprintf("Compiling CPI release '%s': %#v", release.Name(), release))
 

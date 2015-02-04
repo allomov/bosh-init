@@ -1,36 +1,43 @@
 package cmd
 
 import (
-	"errors"
+	boshlog "github.com/cloudfoundry/bosh-agent/logger"
+	boshtime "github.com/cloudfoundry/bosh-agent/time"
 
-	bosherr "github.com/cloudfoundry/bosh-agent/errors"
+	bmui "github.com/cloudfoundry/bosh-micro-cli/ui"
 )
 
 type Runner struct {
-	factory Factory
-	args    []string
+	factory     Factory
+	ui          bmui.UI
+	timeService boshtime.Service
+	logger      boshlog.Logger
 }
 
-func NewRunner(factory Factory) *Runner {
-	return &Runner{factory: factory}
-}
-
-func (runner *Runner) Run(args []string) error {
-	runner.args = args
-
-	if runner.args == nil {
-		return errors.New("Invalid args, cannot be nil")
+func NewRunner(factory Factory, ui bmui.UI, timeService boshtime.Service, logger boshlog.Logger) *Runner {
+	return &Runner{
+		factory:     factory,
+		ui:          ui,
+		timeService: timeService,
+		logger:      logger,
 	}
+}
 
-	if len(runner.args) == 0 {
-		return errors.New("Invalid args, cannot be empty")
+func (r *Runner) Run(args ...string) {
+	if len(args) == 0 {
+		r.ui.ErrorLinef("Invalid usage: No command specified")
 	}
 
 	commandName := args[0]
-	cmd, err := runner.factory.CreateCommand(commandName)
+	cmd, err := r.factory.CreateCommand(commandName)
 	if err != nil {
-		return bosherr.WrapErrorf(err, "Failed creating command with name: %s", commandName)
+		r.ui.ErrorLinef("Command '%s' unknown: %s", commandName, err)
 	}
 
-	return cmd.Run(args[1:])
+	stage := bmui.NewStage(r.ui, r.timeService, r.logger)
+
+	err = cmd.Run(stage, args[1:])
+	if err != nil {
+		r.ui.ErrorLinef("Command '%s' failed: %s", commandName, err)
+	}
 }
