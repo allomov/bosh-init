@@ -99,7 +99,7 @@ func (c *compiler) Compile(pkg *birelpkg.Package) (bistatepkg.CompiledPackageRec
 			"BOSH_PACKAGES_DIR":   c.packagesDir,
 			"PATH":                "/usr/local/bin:/usr/bin:/bin",
 		},
-		UseIsolatedEnv: true,
+		UseIsolatedEnv: false,
 		WorkingDir:     packageSrcDir,
 	}
 
